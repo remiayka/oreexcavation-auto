@@ -9,7 +9,8 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.bus.api.EventPriority;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.lang.reflect.Method;
@@ -19,6 +20,47 @@ public class OreExcavationAutoClientEvents {
 
     private static BlockPos lastRequestedPos = null;
     private static long lastRequestGameTime = -100;
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onBlockBroken(BlockEvent.BreakEvent event) {
+        if (!OreExcavationAutoConfig.isEnabled()
+            || !event.getLevel().isClientSide()) {
+            return;
+        }
+
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null || mc.level == null) {
+            return;
+        }
+
+        BlockPos pos = event.getPos();
+        BlockState state = event.getState();
+        ResourceLocation blockId = mc.level.registryAccess()
+            .registryOrThrow(net.minecraft.core.registries.Registries.BLOCK)
+            .getKey(state.getBlock());
+
+        if (blockId == null
+            || !OreExcavationAutoConfig.shouldActivate(blockId.toString())) {
+            return;
+        }
+
+        long gameTime = mc.level.getGameTime();
+        if (pos.equals(lastRequestedPos)
+            && gameTime - lastRequestGameTime < 40) {
+            return;
+        }
+
+        net.minecraft.core.Direction facing = mc.player.getDirection();
+        net.minecraft.core.Direction side = facing.getOpposite();
+        if (mc.hitResult instanceof BlockHitResult blockHit
+            && blockHit.getBlockPos().equals(pos)) {
+            side = blockHit.getDirection().getOpposite();
+        }
+
+        lastRequestedPos = pos;
+        lastRequestGameTime = gameTime;
+        sendOreExcavationPacket(pos, state, blockId, side, facing);
+    }
 
     private static void sendOreExcavationPacket(
         BlockPos pos,
@@ -72,28 +114,6 @@ public class OreExcavationAutoClientEvents {
     }
 
     @SubscribeEvent
-    public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || !OreExcavationAutoConfig.isEnabled()) return;
-
-        BlockPos pos = event.getPos();
-        BlockState state = mc.level.getBlockState(pos);
-        ResourceLocation blockId = mc.level.registryAccess()
-            .registryOrThrow(net.minecraft.core.registries.Registries.BLOCK)
-            .getKey(state.getBlock());
-
-        if (blockId != null
-            && OreExcavationAutoConfig.shouldActivate(blockId.toString())) {
-            sendOreExcavationPacket(
-                pos,
-                state,
-                blockId,
-                event.getFace().getOpposite(),
-                mc.player.getDirection());
-        }
-    }
-
-    @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Pre event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null) return;
@@ -114,36 +134,5 @@ public class OreExcavationAutoClientEvents {
         while (OreExcavationAutoKeys.OPEN_GUI_KEY.consumeClick()) {
             mc.setScreen(new OreExcavationAutoScreen());
         }
-
-        if (!(mc.hitResult instanceof BlockHitResult blockHit)
-            || !OreExcavationAutoConfig.isEnabled()) {
-            return;
-        }
-
-        BlockPos pos = blockHit.getBlockPos();
-        BlockState state = mc.level.getBlockState(pos);
-        ResourceLocation blockId = mc.level.registryAccess()
-            .registryOrThrow(net.minecraft.core.registries.Registries.BLOCK)
-            .getKey(state.getBlock());
-
-        if (blockId == null
-            || !OreExcavationAutoConfig.shouldActivate(blockId.toString())) {
-            return;
-        }
-
-        long gameTime = mc.level.getGameTime();
-        if (pos.equals(lastRequestedPos)
-            && gameTime - lastRequestGameTime < 40) {
-            return;
-        }
-
-        lastRequestedPos = pos;
-        lastRequestGameTime = gameTime;
-        sendOreExcavationPacket(
-            pos,
-            state,
-            blockId,
-            blockHit.getDirection().getOpposite(),
-            mc.player.getDirection());
     }
 }
