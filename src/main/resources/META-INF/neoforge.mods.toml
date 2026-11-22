@@ -1,0 +1,34 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+issueTrackerURL = ""
+
+[[mods]]
+    modId = "oreexcavationauto"
+    version = "1.3.2"
+    displayName = "Ore Excavation Auto"
+    description = '''
+        Automatically activates Ore Excavation when breaking ores.
+        Supports whitelist/blacklist configuration with a GUI.
+    '''
+
+[[dependencies.oreexcavationauto]]
+    modId = "neoforge"
+    type = "required"
+    versionRange = "[21.1,)"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.oreexcavationauto]]
+    modId = "minecraft"
+    type = "required"
+    versionRange = "[1.21.1,1.22)"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.oreexcavationauto]]
+    modId = "oreexcavation"
+    type = "optional"
+    versionRange = "*"
+    ordering = "NONE"
+    side = "CLIENT"

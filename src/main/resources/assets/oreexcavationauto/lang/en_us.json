@@ -1,0 +1,15 @@
+{
+  "screen.oreexcavationauto.title": "Ore Excavation Auto",
+  "button.oreexcavationauto.enable": "Enable Auto",
+  "button.oreexcavationauto.disable": "Disable Auto",
+  "button.oreexcavationauto.add_current": "+ Add Looked-at Block",
+  "tab.oreexcavationauto.whitelist": "Whitelist",
+  "tab.oreexcavationauto.blacklist": "Blacklist",
+  "tab.oreexcavationauto.all": "All blocks",
+  "search.oreexcavationauto.placeholder": "Search blocks...",
+  "message.oreexcavationauto.enabled": "Ore Excavation Auto: ENABLED",
+  "message.oreexcavationauto.disabled": "Ore Excavation Auto: DISABLED",
+  "key.category.oreexcavationauto": "Ore Excavation Auto",
+  "key.oreexcavationauto.toggle": "Toggle Auto Excavation",
+  "key.oreexcavationauto.open_gui": "Open Auto Excavation Menu"
+}

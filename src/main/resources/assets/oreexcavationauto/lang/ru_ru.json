@@ -1,0 +1,15 @@
+{
+  "screen.oreexcavationauto.title": "Авто Вскопка Руды",
+  "button.oreexcavationauto.enable": "Включить авто",
+  "button.oreexcavationauto.disable": "Выключить авто",
+  "button.oreexcavationauto.add_current": "+ Добавить смотримый блок",
+  "tab.oreexcavationauto.whitelist": "Белый список",
+  "tab.oreexcavationauto.blacklist": "Чёрный список",
+  "tab.oreexcavationauto.all": "Все блоки",
+  "search.oreexcavationauto.placeholder": "Поиск блоков...",
+  "message.oreexcavationauto.enabled": "Авто вскопка: ВКЛЮЧЕНА",
+  "message.oreexcavationauto.disabled": "Авто вскопка: ВЫКЛЮЧЕНА",
+  "key.category.oreexcavationauto": "Авто Вскопка Руды",
+  "key.oreexcavationauto.toggle": "Переключить авто вскопку",
+  "key.oreexcavationauto.open_gui": "Открыть меню авто вскопки"
+}
